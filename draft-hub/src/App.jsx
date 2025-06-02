@@ -148,7 +148,6 @@ function App() {
   '&::-webkit-scrollbar': {     // Chrome, Safari, Edge
     display: 'none',
   },
-       // overflowY: "auto",
       }}
     >
       <ScoutColumn
