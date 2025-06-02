@@ -1,14 +1,85 @@
-import React from "react";
+import {useState, React} from "react";
 import { Grid, Card, CardContent, Typography, Avatar, 
          Divider, Box, TableContainer, Paper, Table, 
-         TableHead, TableRow, TableCell, TableBody,
+         TableHead, TableRow, TableCell, TableBody, Button,
+         TextField
 } from "@mui/material";
 
+const defaultPlayerImg = "https://cdn.nba.com/headshots/nba/latest/1040x760/1642284.png"
+
+const AddReports = () => {
+    const [showInput, setShowInput] = useState(false);
+    const [showReports, setShowReports] = useState(false);
+    const [inputText, setInputText] = useState("");
+    const [reports, setReports] = useState([]);
+  
+    const handleAddReportClick = () => {
+      setShowInput(true);
+      setShowReports(false);
+    };
+  
+    const handleSubmit = () => {
+      if (inputText.trim() !== "") {
+        setReports((prev) => [...prev, inputText.trim()]);
+        setInputText("");
+        setShowInput(false);
+        setShowReports(true);
+      }
+    };
+  
+    return (
+      <Box>
+        <Button variant="contained" size="small" onClick={handleAddReportClick} sx={{ mr: 1 }}>
+          Add Report
+        </Button>
+        <Button 
+          variant="outlined" 
+          size="small" 
+          onClick={() => setShowReports((prev) => !prev)}
+          disabled={reports.length === 0}
+        >
+          {showReports ? "Hide Reports" : "Show Reports"}
+        </Button>
+  
+        {showInput && (
+          <Box mt={1}>
+            <TextField
+              label="Enter Report"
+              multiline
+              rows={3}
+              fullWidth
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+            />
+            <Button 
+              variant="contained" 
+              size="small" 
+              onClick={handleSubmit} 
+              sx={{ mt: 1 }}
+            >
+              Submit
+            </Button>
+          </Box>
+        )}
+  
+        {showReports && reports.length > 0 && (
+          <Box mt={2} sx={{ maxHeight: 150, overflowY: "auto", border: "1px solid #ccc", p: 1, borderRadius: 1 }}>
+            {reports.map((report, i) => (
+              <Typography key={i} variant="body2" sx={{ mb: 1 }}>
+                • {report}
+              </Typography>
+            ))}
+          </Box>
+        )}
+      </Box>
+    );
+  };
 
 const PlayerProfile = ({ players, gameLogs, seasonLogs, activePlayerId, activePlayerName, setCurrentTitle }) => {
   // Get the current player data
   const player = players.find((p) => p.playerId === activePlayerId);
-  
+  const imgSrc = player.photoUrl || defaultPlayerImg;
+
   function inchesToHeight(inches) {
     const feet = Math.floor(inches / 12);
     const remainingInches = inches % 12;
@@ -35,7 +106,7 @@ const PlayerProfile = ({ players, gameLogs, seasonLogs, activePlayerId, activePl
   // Set player info
   const playerSeasonLog = seasonLogs.find(log => log.playerId === activePlayerId);
   const playerGameLogs = gameLogs.filter(log => log.playerId === activePlayerId);
-  const photoUrl = player?.photoUrl || "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Paige_Bueckers_%2851768477711%29.jpg/800px-Paige_Bueckers_%2851768477711%29.jpg";
+  const photoUrl = player?.photoUrl || "https://cdn.nba.com/headshots/nba/latest/1040x760/1642284.png";
   const team = player?.currentTeam || "";
   const league = player?.league || "";
   const ppg = playerSeasonLog?.pts ?? "--";
@@ -134,15 +205,10 @@ const PlayerProfile = ({ players, gameLogs, seasonLogs, activePlayerId, activePl
               <Typography variant="body2" >{league} </Typography>
               
             </Box>
-            <Box mt={1}>
-              <Typography
-                variant="body2"
-                color="primary"
-                sx={{ textDecoration: "underline", cursor: "pointer" }}
-              >
-                View Player Profile
-              </Typography>
+            <Box display="flex" >
+            <AddReports/>
             </Box>
+            
           </CardContent>
         </Card>
        </Box>     

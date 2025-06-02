@@ -16,7 +16,7 @@ function calculateAverageRank(rankings) {
   }
 
 
-function BigBoard({ players , setActivePlayerId, setActivePlayerName, seasonLogs, setCurrentTitle, setActivePlayerRank}) {
+function BigBoard({ activePlayerId , setActivePlayerId, setActivePlayerName, seasonLogs, setCurrentTitle, setActivePlayerRank}) {
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [page, setPage] = useState(1);
 
@@ -89,6 +89,7 @@ function BigBoard({ players , setActivePlayerId, setActivePlayerName, seasonLogs
             setActivePlayerName={setActivePlayerName}
             setCurrentTitle={setCurrentTitle}
             setActivePlayerRank={setActivePlayerRank}
+            activePlayerId={activePlayerId}
             //onHover={() => setActivePlayerId(player.playerId)}
           />
         ))}

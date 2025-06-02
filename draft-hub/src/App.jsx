@@ -98,6 +98,7 @@ function App() {
         scoutRankings={scoutRankings}
         seasonLogs={seasonLogs}
         setActivePlayerId={setActivePlayerId}
+        activePlayerId={activePlayerId}
         setActivePlayerName={setActivePlayerName}
         setCurrentTitle={setCurrentTitle}
         setActivePlayerRank={setActivePlayerRank}/>) : 
@@ -136,6 +137,7 @@ function App() {
         scoutingReports={scoutingReports}
         activePlayerId={activePlayerId}
         activePlayerName={activePlayerName}
+        activePlayerRank={activePlayerRank}
       />
     </Box>
     </Box>

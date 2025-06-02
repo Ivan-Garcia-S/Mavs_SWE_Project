@@ -4,7 +4,7 @@ import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material";
 import { GoldStar, SilverStar, BronzeStar } from "./Stars"; // adjust import path
 const defaultPlayerImg = "https://cdn.nba.com/headshots/nba/latest/1040x760/1642284.png"
 
-function PlayerCard({ player, setActivePlayerId, setActivePlayerName, seasonLogs, setCurrentTitle, setActivePlayerRank}) {
+function PlayerCard({ player, setActivePlayerId, setActivePlayerName, seasonLogs, setCurrentTitle, setActivePlayerRank, activePlayerId}) {
   const { rank } = player;
   const imgSrc = player.photoUrl || defaultPlayerImg;
   
@@ -74,11 +74,13 @@ function PlayerCard({ player, setActivePlayerId, setActivePlayerName, seasonLogs
         p: 1,
         height: "100%",
         cursor: "pointer", // optional, makes it clear it's interactive
+        backgroundColor: activePlayerId === player.playerId ? "#3A82C4" : "white",
       }}
       onMouseEnter={() => {
         setActivePlayerId(player.playerId);
         setActivePlayerName(player.firstName + " " + player.lastName);
         setActivePlayerRank(rank);
+
       }}
       onClick={() => {setCurrentTitle("Player Profile")}}
       //onMouseLeave={() => setActivePlayerId(null)}
