@@ -143,7 +143,7 @@ function PlayerCard({ player, setActivePlayerId, setActivePlayerName, seasonLogs
       <Typography  textAlign="center" variant="h6" align="left">
         PPG
       </Typography>
-      <Typography variant="body2" align="center" color="text.secondary">
+      <Typography variant="body1" align="center" color="text.secondary">
       {seasonLogs?.find(log => log.playerId === player.playerId)?.PTS.toFixed(1) ?? "N/A"}
 
       </Typography>
@@ -160,7 +160,7 @@ function PlayerCard({ player, setActivePlayerId, setActivePlayerName, seasonLogs
       <Typography  textAlign="center" variant="h6" align="left">
         RPG
       </Typography>
-      <Typography variant="body2" align="center" color="text.secondary">
+      <Typography variant="body1" align="center" color="text.secondary">
       {seasonLogs?.find(log => log.playerId === player.playerId)?.TRB.toFixed(1) ?? "N/A"}
 
       </Typography>
@@ -177,7 +177,7 @@ function PlayerCard({ player, setActivePlayerId, setActivePlayerName, seasonLogs
       <Typography  textAlign="center" variant="h6" align="left">
         APG
       </Typography>
-      <Typography variant="body2" align="center" color="text.secondary">
+      <Typography variant="body1" align="center" color="text.secondary">
       {seasonLogs?.find(log => log.playerId === player.playerId)?.AST.toFixed(1) ?? "N/A"}
 
       </Typography>
@@ -194,7 +194,7 @@ function PlayerCard({ player, setActivePlayerId, setActivePlayerName, seasonLogs
       <Typography  textAlign="center" variant="h6" align="left">
         BPG
       </Typography>
-      <Typography variant="body2" align="center" color="text.secondary">
+      <Typography variant="body1" align="center" color="text.secondary">
       {seasonLogs?.find(log => log.playerId === player.playerId)?.BLK.toFixed(1) ?? "N/A"}
 
       </Typography>
@@ -211,7 +211,7 @@ function PlayerCard({ player, setActivePlayerId, setActivePlayerName, seasonLogs
       <Typography  textAlign="center" variant="h6" align="left">
         SPG
       </Typography>
-      <Typography variant="body2" align="center" color="text.secondary">
+      <Typography variant="body1" align="center" color="text.secondary">
       {seasonLogs?.find(log => log.playerId === player.playerId)?.STL.toFixed(1) ?? "N/A"}
 
       </Typography>
@@ -228,7 +228,7 @@ function PlayerCard({ player, setActivePlayerId, setActivePlayerName, seasonLogs
       <Typography  textAlign="center" variant="h6" align="left">
         FG%
       </Typography>
-      <Typography variant="body2" align="center" color="text.secondary">
+      <Typography variant="body1" align="center" color="text.secondary">
       {seasonLogs?.find(log => log.playerId === player.playerId)?.["FG%"].toFixed(1) ?? "N/A"}
 
       </Typography>

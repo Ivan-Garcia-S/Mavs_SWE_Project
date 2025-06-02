@@ -17,6 +17,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 
+
+/**
+ * Handles adding, editing, and deleting scouting reports.
+ * Uses a dialog to display reports and inputs.
+ */
 const AddReports = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [reports, setReports] = useState([]);
@@ -155,6 +160,10 @@ const AddReports = () => {
   );
 };
 
+/**
+ * Displays player profile info including photo, physical measurements,
+ * and season/game stats with option to toggle total vs per game stats.
+ */
 
 const PlayerProfile = ({ players, gameLogs, seasonLogs, activePlayerId, activePlayerName, setCurrentTitle, measurements }) => {
   // Get the current player data
@@ -258,7 +267,7 @@ const PlayerProfile = ({ players, gameLogs, seasonLogs, activePlayerId, activePl
       
         <Card sx={{ height: "100%", display: "flex", flexDirection: "column", flex: 1 }}>
           <CardContent sx={{ flexGrow: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
-            
+            {/* Player Card */}
           <Box sx={{ 
             whiteSpace: "nowrap", 
             overflow: "hidden", 
@@ -270,7 +279,7 @@ const PlayerProfile = ({ players, gameLogs, seasonLogs, activePlayerId, activePl
                 fontWeight="bold"
                 gutterBottom
                 sx={{
-                fontSize: "clamp(1rem, 4vw, 2rem)", // auto scales between 1rem and 2rem
+                fontSize: "clamp(1rem, 4vw, 2rem)",
                 lineHeight: 1.2,
                 whiteSpace: "nowrap",
                 overflow: "hidden",
@@ -280,6 +289,7 @@ const PlayerProfile = ({ players, gameLogs, seasonLogs, activePlayerId, activePl
               {activePlayerName}
             </Typography>
           </Box>
+            {/* Player Photo */}
             <Box display="flex" justifyContent="center" my={2}>
             <Avatar
               src={photoUrl}
@@ -334,7 +344,7 @@ const PlayerProfile = ({ players, gameLogs, seasonLogs, activePlayerId, activePl
        </Box>     
  
       <Box sx={{ flex: 8, height: "100%"}}>
-      {/* Right Panel */}
+       {/* Season Stats Card */}
      
         <Card sx={{ height: "100%", display: "flex", flexDirection: "column", flex: 1 }}>
           <CardContent sx={{ flexGrow: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
@@ -387,7 +397,8 @@ const PlayerProfile = ({ players, gameLogs, seasonLogs, activePlayerId, activePl
                 </Box>
               ))}
             </Box>
-
+            
+            {/* Physical Measurements Card */}
             <Divider sx={{ mb: 2 }} />
             <Typography variant="h6" color="error" fontWeight="bold">
               PLAYER METRICS
@@ -395,38 +406,38 @@ const PlayerProfile = ({ players, gameLogs, seasonLogs, activePlayerId, activePl
             <Grid container spacing={2} mt={1}>
               <Grid item xs={6}>
                 <Typography variant="body2" fontWeight="bold">Wingspan</Typography>
-                <Typography  textAlign="center">{wingspan}"</Typography>
+                <Typography  textAlign="center">{wingspan}{wingspan !== "--" && ('"')}</Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography variant="body2" fontWeight="bold">Reach</Typography>
-                <Typography textAlign="center">{reach}"</Typography>
+                <Typography textAlign="center">{reach}{reach !== "--" && ('"')}</Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography variant="body2" fontWeight="bold">Max Vert</Typography>
-                <Typography  textAlign="center">{maxVert}"</Typography>
+                <Typography  textAlign="center">{maxVert}{maxVert !== "--" && ('"')}</Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography variant="body2" fontWeight="bold">No Step Vert</Typography>
-                <Typography  textAlign="center">{noStepVertical}"</Typography>
+                <Typography  textAlign="center">{noStepVertical}{noStepVertical !== "--" && ('"')}</Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography variant="body2" fontWeight="bold">Body Fat</Typography>
-                <Typography  textAlign="center">{bodyFat}</Typography>
+                <Typography  textAlign="center">{bodyFat}{bodyFat !== "--" && ("%")}</Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography variant="body2" fontWeight="bold">Agility</Typography>
-                <Typography  textAlign="center">{agility}s</Typography>
+                <Typography  textAlign="center">{agility}{agility !== "--" && ("s")}</Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography variant="body2" fontWeight="bold">Sprint</Typography>
-                <Typography  textAlign="center">{sprint}s</Typography>
+                <Typography  textAlign="center">{sprint}{sprint !== "--" && ("s")}</Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography variant="body2" fontWeight="bold">Shuttle Best</Typography>
-                <Typography  textAlign="center">{shuttleBest}s</Typography>
+                <Typography  textAlign="center">{shuttleBest}{shuttleBest !== "--" && ("s")}</Typography>
               </Grid>
             </Grid>
-
+               {/* Game Log Card */}
             <Divider sx={{ my: 3 }} />
             <Typography variant="h6" color="error" fontWeight="bold">
               GAME LOGS
