@@ -1,12 +1,12 @@
-import { useState, useEffect, useRef, act } from 'react';
+import { useState, useEffect, useRef} from 'react';
 import './App.css';
 import draftData from './data/intern_project_data.json';
-//import draftData from './data/ivan_test_data.json';
 import BigBoard from './components/BigBoard';
 import ScoutColumn from './components/ScoutColumn';
 import PlayerProfile from './components/PlayerProfile'
 
-import { Card, CardContent, Typography, Box } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home";
 
 function App() {
   const [bios, setBios] = useState([]);
@@ -18,7 +18,6 @@ function App() {
   const [activePlayerId, setActivePlayerId] = useState(null);
   const [activePlayerName, setActivePlayerName] = useState(null)
   const bigBoardRef = useRef(null);
-  const [bigBoardHeight, setBigBoardHeight] = useState(0);
   const [currentTitle, setCurrentTitle] = useState("2025 NBA Draft Big Board")
   const [activePlayerRank, setActivePlayerRank] = useState(null)
 
@@ -40,7 +39,6 @@ function App() {
 
   return (
     <Box
-  data-name="rooot"
   sx={{
     display: "flex",
     flexDirection: "column",
@@ -52,23 +50,43 @@ function App() {
 >
   {/* Fixed Header */}
   <Box
-    data-name="1st-Box"
-    sx={{
-      width: "100%",
-      position: "fixed",
-      top: 0,
-      left: 0,
-      backgroundColor: "#00538C",
-      zIndex: 1000,
-      height: "120px",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      borderBottom: "1px solid #ccc",
+  sx={{
+    width: "100%",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    backgroundColor: "#00538C",
+    zIndex: 1000,
+    height: "120px",
+    display: "flex",
+    alignItems: "center",
+    borderBottom: "1px solid #ccc",
+    px: 3,
+  }}
+>
+  {/* Centered Title */}
+  <h1
+    style={{
+      position: "absolute",
+      left: "50%",
+      transform: "translateX(-50%)",
+      margin: 0,
+      color: "white",
     }}
   >
-    <h1 style={{ margin: 0, color: "white"}}>{currentTitle}</h1>
+    {currentTitle}
+  </h1>
+
+  {/* Right-Aligned Home Button */}
+  <Box sx={{ marginLeft: "auto" }}>
+    <IconButton
+      onClick={() => setCurrentTitle("2025 NBA Draft Big Board")}
+      sx={{ pr: "50px", color: "white" }}
+    >
+      <HomeIcon />
+    </IconButton>
   </Box>
+</Box>
 
   {/* Spacer below fixed header */}
   <Box sx={{ height: "600px" }} />
@@ -108,6 +126,7 @@ function App() {
         seasonLogs={seasonLogs}
         activePlayerId={activePlayerId}
         activePlayerName={activePlayerName}
+        measurements={measurements}
         setCurrentTitle={setCurrentTitle}/>) 
       }
     </Box>
@@ -144,13 +163,6 @@ function App() {
   
 </Box>
   );
-    
-    
-
-
-  ///////
-  
-  
   
 }
 

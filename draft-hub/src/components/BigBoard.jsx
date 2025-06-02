@@ -61,7 +61,7 @@ function BigBoard({ activePlayerId , setActivePlayerId, setActivePlayerName, sea
 
       <Box data-name="" display="flex" justifyContent="space-between" alignItems="left" mb={2}>
 
-        <Typography>Rows per page:</Typography>
+        <Typography variant="h6" fontWeight="bold">Rows per page:</Typography>
         <Select
           value={rowsPerPage}
           onChange={(e) => {

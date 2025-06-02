@@ -2,83 +2,166 @@ import {useState, React} from "react";
 import { Grid, Card, CardContent, Typography, Avatar, 
          Divider, Box, TableContainer, Paper, Table, 
          TableHead, TableRow, TableCell, TableBody, Button,
-         TextField
+         TextField,  Dialog,
+         DialogTitle,
+         DialogContent,
+         DialogActions,
+         IconButton
 } from "@mui/material";
 
 const defaultPlayerImg = "https://cdn.nba.com/headshots/nba/latest/1040x760/1642284.png"
 
+import CloseIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from "@mui/icons-material/Cancel";
+
 const AddReports = () => {
-    const [showInput, setShowInput] = useState(false);
-    const [showReports, setShowReports] = useState(false);
-    const [inputText, setInputText] = useState("");
-    const [reports, setReports] = useState([]);
-  
-    const handleAddReportClick = () => {
-      setShowInput(true);
-      setShowReports(false);
-    };
-  
-    const handleSubmit = () => {
-      if (inputText.trim() !== "") {
-        setReports((prev) => [...prev, inputText.trim()]);
-        setInputText("");
-        setShowInput(false);
-        setShowReports(true);
-      }
-    };
-  
-    return (
-      <Box>
-        <Button variant="contained" size="small" onClick={handleAddReportClick} sx={{ mr: 1 }}>
-          Add Report
-        </Button>
-        <Button 
-          variant="outlined" 
-          size="small" 
-          onClick={() => setShowReports((prev) => !prev)}
-          disabled={reports.length === 0}
-        >
-          {showReports ? "Hide Reports" : "Show Reports"}
-        </Button>
-  
-        {showInput && (
-          <Box mt={1}>
-            <TextField
-              label="Enter Report"
-              multiline
-              rows={3}
-              fullWidth
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-            />
-            <Button 
-              variant="contained" 
-              size="small" 
-              onClick={handleSubmit} 
-              sx={{ mt: 1 }}
-            >
-              Submit
-            </Button>
-          </Box>
-        )}
-  
-        {showReports && reports.length > 0 && (
-          <Box mt={2} sx={{ maxHeight: 150, overflowY: "auto", border: "1px solid #ccc", p: 1, borderRadius: 1 }}>
-            {reports.map((report, i) => (
-              <Typography key={i} variant="body2" sx={{ mb: 1 }}>
-                • {report}
-              </Typography>
-            ))}
-          </Box>
-        )}
-      </Box>
-    );
+  const [openDialog, setOpenDialog] = useState(false);
+  const [reports, setReports] = useState([]);
+  const [newReport, setNewReport] = useState("");
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [editedText, setEditedText] = useState("");
+
+  const handleDialogOpen = () => setOpenDialog(true);
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+    setNewReport("");
+    setEditingIndex(null);
   };
 
-const PlayerProfile = ({ players, gameLogs, seasonLogs, activePlayerId, activePlayerName, setCurrentTitle }) => {
+  const handleAddReport = () => {
+    if (newReport.trim() !== "") {
+      setReports((prev) => [...prev, newReport.trim()]);
+      setNewReport("");
+    }
+  };
+
+  const handleEdit = (index) => {
+    setEditingIndex(index);
+    setEditedText(reports[index]);
+  };
+
+  const handleSaveEdit = () => {
+    if (editedText.trim() !== "") {
+      setReports((prev) =>
+        prev.map((r, i) => (i === editingIndex ? editedText.trim() : r))
+      );
+      setEditingIndex(null);
+      setEditedText("");
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingIndex(null);
+    setEditedText("");
+  };
+
+  const handleDelete = (index) => {
+    setReports((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  return (
+    <Box>
+      <Button
+        variant="outlined"
+        size="small"
+        onClick={handleDialogOpen}
+        disabled={false}
+        sx={{
+            backgroundColor: '#00538C',
+            color: 'white',
+            borderColor: '#00538C',
+            '&:hover': {
+              backgroundColor: 'darkblue',
+              borderColor: 'darkblue',
+            },
+          }}
+      >
+        Scouting Reports
+      </Button>
+
+      <Dialog open={openDialog} onClose={handleDialogClose} fullWidth maxWidth="sm">
+        <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <Typography variant="h6" fontWeight="bold">Scouting Reports</Typography>
+          <IconButton onClick={handleDialogClose}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent dividers sx={{ maxHeight: 300 }}>
+          {reports.map((report, i) => (
+            <Box key={i} display="flex" alignItems="center" mb={1}>
+              {editingIndex === i ? (
+                <>
+                  <TextField
+                    value={editedText}
+                    onChange={(e) => setEditedText(e.target.value)}
+                    fullWidth
+                    multiline
+                    size="small"
+                  />
+                  <IconButton onClick={handleSaveEdit} color="primary">
+                    <SaveIcon />
+                  </IconButton>
+                  <IconButton onClick={handleCancelEdit} color="warning">
+                    <CancelIcon />
+                  </IconButton>
+                </>
+              ) : (
+                <>
+                  <Typography variant="body2" sx={{ flex: 1 }}>
+                    • {report}
+                  </Typography>
+                  <IconButton onClick={() => handleEdit(i)} color="primary">
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton onClick={() => handleDelete(i)} color="error">
+                    <DeleteIcon />
+                  </IconButton>
+                </>
+              )}
+            </Box>
+          ))}
+
+          <Box mt={2}>
+            <TextField
+              label="Add New Report"
+              multiline
+              rows={2}
+              fullWidth
+              value={newReport}
+              onChange={(e) => setNewReport(e.target.value)}
+            />
+            <Button
+              variant="contained"
+              size="small"
+              onClick={handleAddReport}
+              sx={{ mt: 1 }}
+            >
+              Add
+            </Button>
+          </Box>
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
+  );
+};
+
+
+const PlayerProfile = ({ players, gameLogs, seasonLogs, activePlayerId, activePlayerName, setCurrentTitle, measurements }) => {
   // Get the current player data
   const player = players.find((p) => p.playerId === activePlayerId);
   const imgSrc = player.photoUrl || defaultPlayerImg;
+  const playerMetrics = measurements.find((m) => m.playerId === activePlayerId);
+  const [changeViewText, setChangeViewText] = useState("Show Total Stats");
 
   function inchesToHeight(inches) {
     const feet = Math.floor(inches / 12);
@@ -109,14 +192,31 @@ const PlayerProfile = ({ players, gameLogs, seasonLogs, activePlayerId, activePl
   const photoUrl = player?.photoUrl || "https://cdn.nba.com/headshots/nba/latest/1040x760/1642284.png";
   const team = player?.currentTeam || "";
   const league = player?.league || "";
-  const ppg = playerSeasonLog?.pts ?? "--";
   const height = player?.height ? inchesToHeight(player.height) : "--";
   const weight = player?.weight || "--";
   const birthday = player?.birthDate || "";
   const age = birthday ? getAgeFromBirthday(birthday) : "--";
-  const birthplace = player?.birthplace || "Hopkins, Minnesota";
-  const college = player?.college || "UConn";
-  const country = player?.country || "United States";
+  const wingspan = playerMetrics?.wingspan || "--";
+  const reach = playerMetrics?.reach || "--";
+  const maxVert = playerMetrics?.wingspan || "--";
+  const noStepVertical = playerMetrics?.wingspan || "--";
+  const bodyFat = playerMetrics?.bodyFat || "--";
+  const agility = playerMetrics?.agility || "--";
+  const sprint = playerMetrics?.sprint || "--";
+  const shuttleBest = playerMetrics?.shuttleBest || "--";
+  const ptsTotal = Math.floor(playerSeasonLog.GP * playerSeasonLog.PTS);
+  const rebTotal = Math.floor(playerSeasonLog.GP * playerSeasonLog.TRB);
+  const astTotal = Math.floor(playerSeasonLog.GP * playerSeasonLog.AST);
+  const stlTotal = Math.floor(playerSeasonLog.GP * playerSeasonLog.STL);
+  const blkTotal = Math.floor(playerSeasonLog.GP * playerSeasonLog.BLK);
+  const gameTotal = playerSeasonLog.GP;
+  const tovTotal = Math.floor(playerSeasonLog.GP * playerSeasonLog.TOV);
+  const gameStartedTotal =playerSeasonLog.GS;
+  const minTotal = Math.floor(playerSeasonLog.GP * playerSeasonLog.MP);
+  const pfTotal = Math.floor(playerSeasonLog.GP * playerSeasonLog.PF);
+
+
+
   const statsLabels = {
     "PPG": "PTS",
     "RPG": "TRB",
@@ -132,7 +232,18 @@ const PlayerProfile = ({ players, gameLogs, seasonLogs, activePlayerId, activePl
     "FTP": "FTP",
     "MIN": "MP"
   };
-  const careerDescription = player?.careerDescription || `Career Highlights: NCAA Champion (2025), BIG EAST Player of the Year (2025), All-BIG EAST First Team (2025)...`;
+  const totalsLabels = {
+    "PTS": ptsTotal,
+    "REB": rebTotal,
+    "AST": astTotal,
+    "G": gameTotal,
+    "GS":  gameStartedTotal,
+    "STL": stlTotal,
+    "BLK": blkTotal,
+    "TOV": tovTotal,
+    "PF": pfTotal,
+    "MIN": minTotal
+  }
 
   return (
     <Box sx={{ 
@@ -190,23 +301,32 @@ const PlayerProfile = ({ players, gameLogs, seasonLogs, activePlayerId, activePl
               PROSPECT INFO
             </Typography>
 
-            {/* Section 1*/}
+           
             <Box display="flex" >
+                <Typography component="span" fontWeight="bold">Height: </Typography>
                 <Typography variant="body1" mx={1}>{height}</Typography>
-                <Typography component="span" fontWeight="bold"> | </Typography>
-                <Typography variant="body1"mx={1} >{weight} lbs</Typography>
-                <Typography component="span" fontWeight="bold"> | </Typography>
-                <Typography variant="body1" mx={1}>Age: {age}</Typography>
+            </Box>
+            <Box display="flex">
+                <Typography component="span" fontWeight="bold">Weight:</Typography>
+                <Typography variant="body1" mx={1} >{weight} lbs</Typography>
+                
+            </Box>
+            <Box display="flex" >
+                <Typography component="span" fontWeight="bold">Age: </Typography>
+                <Typography variant="body1" mx={1}>{age}</Typography>
             </Box>
 
-            {/* Section 2*/}
+           
             <Box display="flex" >
-              <Typography variant="body2" mx={1}>{team} -</Typography>
-              <Typography variant="body2" >{league} </Typography>
-              
+              <Typography component="span" fontWeight="bold">Team: </Typography>
+              <Typography variant="body2" mx={1}>{team}</Typography>
             </Box>
             <Box display="flex" >
-            <AddReports/>
+              <Typography component="span" fontWeight="bold">League: </Typography>
+              <Typography variant="body2" mx={1}>{league} </Typography>
+            </Box>
+            <Box justifyContent="center" display="flex" marginTop="50px">
+              <AddReports/>
             </Box>
             
           </CardContent>
@@ -226,10 +346,16 @@ const PlayerProfile = ({ players, gameLogs, seasonLogs, activePlayerId, activePl
                 variant="body2"
                 sx={{ textDecoration: "underline", cursor: "pointer" }}
                 onClick={() => {
-                   setCurrentTitle("2025 NBA Draft Big Board")
+                   if (changeViewText == "Show Total Stats"){
+                    setChangeViewText("Show Per Game Stats");
+                   }
+                   else{
+                    setChangeViewText("Show Total Stats");
+                   }
+                   
                   }}
               >
-                View All Prospects
+                {changeViewText}
               </Typography>
             </Box>
             <Box display="flex" gap={4} mb={3}>
@@ -239,7 +365,17 @@ const PlayerProfile = ({ players, gameLogs, seasonLogs, activePlayerId, activePl
                     2024-25
                   </Typography>
                 </Box>
-              {["MIN", "G","GS", "PPG", "RPG", "APG", "FG%", "3P%", "SPG", "BPG"].map((label) => (
+                {changeViewText == "Show Per Game Stats" && ["MIN", "G","GS", "PTS", "REB", "AST", "STL", "BLK"].map((label) => (
+                <Box key={label} textAlign="center">
+                  <Typography fontWeight="bold" minWidth="40px" variant="overline" display="block" backgroundColor="#f2f2f2">
+                    {label}
+                  </Typography>
+                  <Typography variant="h6"  >
+                    {totalsLabels[label]}
+                  </Typography>
+                </Box>
+              ))}
+              {changeViewText == "Show Total Stats" && ["MIN", "G","GS", "PPG", "RPG", "APG", "FG%", "3P%", "SPG", "BPG"].map((label) => (
                 <Box key={label} textAlign="center">
                   <Typography fontWeight="bold" minWidth="40px" variant="overline" display="block" backgroundColor="#f2f2f2">
                     {label}
@@ -254,35 +390,40 @@ const PlayerProfile = ({ players, gameLogs, seasonLogs, activePlayerId, activePl
 
             <Divider sx={{ mb: 2 }} />
             <Typography variant="h6" color="error" fontWeight="bold">
-              PROSPECT INFO
+              PLAYER METRICS
             </Typography>
             <Grid container spacing={2} mt={1}>
               <Grid item xs={6}>
-            
+                <Typography variant="body2" fontWeight="bold">Wingspan</Typography>
+                <Typography  textAlign="center">{wingspan}"</Typography>
               </Grid>
               <Grid item xs={6}>
-                <Typography variant="body2" fontWeight="bold">Height</Typography>
-                <Typography>{height}</Typography>
+                <Typography variant="body2" fontWeight="bold">Reach</Typography>
+                <Typography textAlign="center">{reach}"</Typography>
               </Grid>
               <Grid item xs={6}>
-                <Typography variant="body2" fontWeight="bold">Weight</Typography>
-                <Typography>{weight}</Typography>
+                <Typography variant="body2" fontWeight="bold">Max Vert</Typography>
+                <Typography  textAlign="center">{maxVert}"</Typography>
               </Grid>
               <Grid item xs={6}>
-                <Typography variant="body2" fontWeight="bold">Birthdate</Typography>
-                <Typography>{birthday}</Typography>
+                <Typography variant="body2" fontWeight="bold">No Step Vert</Typography>
+                <Typography  textAlign="center">{noStepVertical}"</Typography>
               </Grid>
               <Grid item xs={6}>
-                <Typography variant="body2" fontWeight="bold">Birthplace</Typography>
-                <Typography>{birthplace}</Typography>
+                <Typography variant="body2" fontWeight="bold">Body Fat</Typography>
+                <Typography  textAlign="center">{bodyFat}</Typography>
               </Grid>
               <Grid item xs={6}>
-                <Typography variant="body2" fontWeight="bold">College/Club</Typography>
-                <Typography>{college}</Typography>
+                <Typography variant="body2" fontWeight="bold">Agility</Typography>
+                <Typography  textAlign="center">{agility}s</Typography>
               </Grid>
               <Grid item xs={6}>
-                <Typography variant="body2" fontWeight="bold">Country</Typography>
-                <Typography>{country}</Typography>
+                <Typography variant="body2" fontWeight="bold">Sprint</Typography>
+                <Typography  textAlign="center">{sprint}s</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body2" fontWeight="bold">Shuttle Best</Typography>
+                <Typography  textAlign="center">{shuttleBest}s</Typography>
               </Grid>
             </Grid>
 
