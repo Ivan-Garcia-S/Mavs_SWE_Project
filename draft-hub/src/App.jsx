@@ -83,7 +83,14 @@ function App() {
         <Box sx={{ marginLeft: "auto" }}>
           <IconButton
             onClick={() => setCurrentTitle("2025 NBA Draft Big Board")}
-            sx={{ pr: "50px", color: "white" }}
+            sx={{
+              pr: "50px",
+              color: "white",
+              "&:focus": {
+                outline: "none",
+                boxShadow: "none",
+              },
+            }}
             aria-label="Home"
           >
             <HomeIcon />
