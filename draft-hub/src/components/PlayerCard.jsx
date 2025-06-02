@@ -4,7 +4,7 @@ import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material";
 import { GoldStar, SilverStar, BronzeStar } from "./Stars"; // adjust import path
 const defaultPlayerImg = "https://cdn.nba.com/headshots/nba/latest/1040x760/1642284.png"
 
-function PlayerCard({ player, setActivePlayerId, setActivePlayerName, seasonLogs }) {
+function PlayerCard({ player, setActivePlayerId, setActivePlayerName, seasonLogs, setCurrentTitle, setActivePlayerRank}) {
   const { rank } = player;
   const imgSrc = player.photoUrl || defaultPlayerImg;
   
@@ -72,12 +72,15 @@ function PlayerCard({ player, setActivePlayerId, setActivePlayerName, seasonLogs
         mb: 2,
         alignItems: "center",
         p: 1,
+        height: "100%",
         cursor: "pointer", // optional, makes it clear it's interactive
       }}
       onMouseEnter={() => {
         setActivePlayerId(player.playerId);
-        setActivePlayerName(player.firstName + " " + player.lastName)
+        setActivePlayerName(player.firstName + " " + player.lastName);
+        setActivePlayerRank(rank);
       }}
+      onClick={() => {setCurrentTitle("Player Profile")}}
       //onMouseLeave={() => setActivePlayerId(null)}
     >
       {renderRankIcon()}
@@ -89,17 +92,40 @@ function PlayerCard({ player, setActivePlayerId, setActivePlayerName, seasonLogs
         sx={{ width: 80, height: 80, borderRadius: 1, objectFit: "cover", mr: 2 }}
       />
 
-<CardContent sx={{ flex: 3, p: 0 }}>
+<CardContent sx={{ flex: 3, p: 0, minWidth: 0, overflow: "visible"}}>
   <Box sx={{ display: "flex", alignItems: "center" }}>
     {/* Left: vertical text stack */}
-    <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
-      <Typography variant="h6" align="left">
+    <Box sx={{ 
+           display: "flex", 
+           flexDirection: "column", 
+           flex: 1, 
+           minWidth: 0, 
+           overflow: "visible", 
+           maxWidth: "100%",
+           flexShrink: 1
+         }}>
+      <Typography variant="h6" align="left" noWrap 
+        sx={{
+          overflow: "visible", 
+          whiteSpace: "nowrap",
+          
+        }}>
         {player.firstName} {player.lastName}
       </Typography>
-      <Typography variant="body2" align="left" color="text.secondary">
+      <Typography variant="body2" align="left" color="text.secondary" noWrap
+          sx={{
+            overflow: "visible", 
+            whiteSpace: "nowrap",
+        }}
+        >
         {player.currentTeam} — {player.league}
       </Typography>
-      <Typography variant="body2" align="left">
+      <Typography variant="body2" align="left" noWrap
+          sx={{
+            overflow: "visible", 
+            whiteSpace: "nowrap",  
+          }}
+        >
         {player.homeTown}, {player.homeState || player.homeCountry}
       </Typography>
     </Box>
@@ -116,7 +142,7 @@ function PlayerCard({ player, setActivePlayerId, setActivePlayerName, seasonLogs
         PPG
       </Typography>
       <Typography variant="body2" align="center" color="text.secondary">
-      {seasonLogs?.find(log => log.playerId === player.playerId)?.PTS ?? "N/A"}
+      {seasonLogs?.find(log => log.playerId === player.playerId)?.PTS.toFixed(1) ?? "N/A"}
 
       </Typography>
       
@@ -133,7 +159,7 @@ function PlayerCard({ player, setActivePlayerId, setActivePlayerName, seasonLogs
         RPG
       </Typography>
       <Typography variant="body2" align="center" color="text.secondary">
-      {seasonLogs?.find(log => log.playerId === player.playerId)?.TRB ?? "N/A"}
+      {seasonLogs?.find(log => log.playerId === player.playerId)?.TRB.toFixed(1) ?? "N/A"}
 
       </Typography>
       
@@ -150,7 +176,7 @@ function PlayerCard({ player, setActivePlayerId, setActivePlayerName, seasonLogs
         APG
       </Typography>
       <Typography variant="body2" align="center" color="text.secondary">
-      {seasonLogs?.find(log => log.playerId === player.playerId)?.AST ?? "N/A"}
+      {seasonLogs?.find(log => log.playerId === player.playerId)?.AST.toFixed(1) ?? "N/A"}
 
       </Typography>
       
@@ -167,7 +193,7 @@ function PlayerCard({ player, setActivePlayerId, setActivePlayerName, seasonLogs
         BPG
       </Typography>
       <Typography variant="body2" align="center" color="text.secondary">
-      {seasonLogs?.find(log => log.playerId === player.playerId)?.BLK ?? "N/A"}
+      {seasonLogs?.find(log => log.playerId === player.playerId)?.BLK.toFixed(1) ?? "N/A"}
 
       </Typography>
       
@@ -184,7 +210,7 @@ function PlayerCard({ player, setActivePlayerId, setActivePlayerName, seasonLogs
         SPG
       </Typography>
       <Typography variant="body2" align="center" color="text.secondary">
-      {seasonLogs?.find(log => log.playerId === player.playerId)?.STL ?? "N/A"}
+      {seasonLogs?.find(log => log.playerId === player.playerId)?.STL.toFixed(1) ?? "N/A"}
 
       </Typography>
       

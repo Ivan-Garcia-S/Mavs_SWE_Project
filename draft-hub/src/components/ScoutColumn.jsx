@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, Typography, Box } from "@mui/material";
 
-function ScoutColumn({ scoutRankings, activePlayerId, bigBoardHeight, scoutingReports, activePlayerName }) {
+function ScoutColumn({ scoutRankings, activePlayerId, bigBoardHeight, scoutingReports, activePlayerName, activePlayerRank }) {
   const samplePlayer = scoutRankings[0];
   if (!samplePlayer) return null;
 

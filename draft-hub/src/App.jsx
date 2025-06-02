@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, act } from 'react';
 import './App.css';
-//import draftData from './data/intern_project_data.json';
-import draftData from './data/ivan_test_data.json';
+import draftData from './data/intern_project_data.json';
+//import draftData from './data/ivan_test_data.json';
 import BigBoard from './components/BigBoard';
 import ScoutColumn from './components/ScoutColumn';
+import PlayerProfile from './components/PlayerProfile'
 
 import { Card, CardContent, Typography, Box } from "@mui/material";
 
@@ -18,6 +19,8 @@ function App() {
   const [activePlayerName, setActivePlayerName] = useState(null)
   const bigBoardRef = useRef(null);
   const [bigBoardHeight, setBigBoardHeight] = useState(0);
+  const [currentTitle, setCurrentTitle] = useState("2025 NBA Draft Big Board")
+  const [activePlayerRank, setActivePlayerRank] = useState(null)
 
   useEffect(() => {
     setBios(draftData.bio || []);
@@ -42,7 +45,9 @@ function App() {
     display: "flex",
     flexDirection: "column",
     width: "100%",
+    height: "100%",
     boxSizing: "border-box",
+    backgroundColor: "#B8C4CA"
   }}
 >
   {/* Fixed Header */}
@@ -62,16 +67,17 @@ function App() {
       borderBottom: "1px solid #ccc",
     }}
   >
-    <h1 style={{ margin: 0, color: "white"}}>NBA Draft Hub</h1>
+    <h1 style={{ margin: 0, color: "white"}}>{currentTitle}</h1>
   </Box>
 
   {/* Spacer below fixed header */}
-  <Box sx={{ height: "120px" }} />
+  <Box sx={{ height: "600px" }} />
 
   {/* Main Content */}
   <Box
     data-name="board+scout"
     sx={{
+      marginTop: "123px",
       display: "flex",
       flexDirection: "row",
       gap: 2,
@@ -81,17 +87,28 @@ function App() {
       paddingBottom: "2%",
       boxSizing: "border-box",
       backgroundColor: "#B8C4CA",
+     
     }}
   >
     {/* BigBoard (scrolls normally) */}
     <Box sx={{ flexGrow: 8, flexBasis: 0 }}>
-      <BigBoard
+      {currentTitle === "2025 NBA Draft Big Board" ?
+      (<BigBoard
         players={bios}
         scoutRankings={scoutRankings}
         seasonLogs={seasonLogs}
         setActivePlayerId={setActivePlayerId}
         setActivePlayerName={setActivePlayerName}
-      />
+        setCurrentTitle={setCurrentTitle}
+        setActivePlayerRank={setActivePlayerRank}/>) : 
+      (<PlayerProfile
+        players={bios}
+        gameLogs={gameLogs}
+        seasonLogs={seasonLogs}
+        activePlayerId={activePlayerId}
+        activePlayerName={activePlayerName}
+        setCurrentTitle={setCurrentTitle}/>) 
+      }
     </Box>
 
     {/* ScoutColumn (sticks to top when scrolling) */}
